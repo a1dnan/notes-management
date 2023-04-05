@@ -11,5 +11,6 @@ import java.util.List;
 public interface NoteRepository extends JpaRepository<Note, Long> {
 
     List<Note> findByLevel(Level level);
+    List<Note> findAllByOrderByCreatedAtDesc();
 
 }

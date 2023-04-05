@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,11 @@ public class NoteServiceImpl implements NoteService {
     public HttpResponse<Note> getNotes() {
         log.info("Fetching all the notes from the database");
         return HttpResponse.<Note>builder()
-                .notes(noteRepo.findAll())
+                .notes(noteRepo.findAll()
+                            .stream()
+                            .sorted(Comparator.comparing(Note::getCreatedAt).reversed())
+                            .collect(Collectors.toList()))//To sort Notes in descending order by created date
+                //.notes(noteRepo.findAllByOrderByCreatedAtDesc()) // Second method
                 .message(noteRepo.count() > 0 ? noteRepo.count() + " notes retrieved" : "No notes to display")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
@@ -43,7 +49,9 @@ public class NoteServiceImpl implements NoteService {
         List<Note> notes = noteRepo.findByLevel(level);
         log.info("Fetching all the notes by level {}",level);
         return HttpResponse.<Note>builder()
-                .notes(notes)
+                .notes(notes.stream()
+                        .sorted(Comparator.comparing(Note::getCreatedAt).reversed())
+                        .collect(Collectors.toList()))
                 .message(notes.size() + " notes are of" + level + " importance")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
