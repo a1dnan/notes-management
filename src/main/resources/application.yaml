@@ -1,0 +1,17 @@
+server:
+  error:
+    path: /note/error
+    whitelabel:
+      enabled: false
+spring:
+  datasource:
+    password: ''
+    url: jdbc:mysql://localhost:3306/notes_db
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+    show-sql: true
